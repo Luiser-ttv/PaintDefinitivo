@@ -292,22 +292,23 @@ public class VentanaPaint extends javax.swing.JFrame {
         jDialog3Layout.setHorizontalGroup(
             jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jDialog3Layout.setVerticalGroup(
             jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog3Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(35, 35, 35))
+                .addGroup(jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog3Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDialog3Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jButton3)))
+                .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -827,14 +828,15 @@ public class VentanaPaint extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        bufferGraphics.drawImage(buffer2,0, 0, null);
         switch (formaSeleccionada) {
             case 1:
                 posLapizXX = evt.getX();
                 posLapizYY = evt.getY();
                 if (posLapizX != posLapizXX || posLapizY != posLapizYY) {
-                    bufferGraphics.setColor(colorSeleccionado);
-                    bufferGraphics.setStroke(new Trazo(jSlider1.getValue(), true, true));
-                    bufferGraphics.drawLine(posLapizX, posLapizY, posLapizXX, posLapizYY);
+                    buffer2Graphics.setColor(colorSeleccionado);
+                    buffer2Graphics.setStroke(new Trazo(jSlider1.getValue(), true, true));
+                    buffer2Graphics.drawLine(posLapizX, posLapizY, posLapizXX, posLapizYY);
                     posLapizX = posLapizXX;
                     posLapizY = posLapizYY;
                 }
@@ -843,14 +845,18 @@ public class VentanaPaint extends javax.swing.JFrame {
                 posLapizXX = evt.getX();
                 posLapizYY = evt.getY();
                 if (posLapizX != posLapizXX || posLapizY != posLapizYY) {
-                    bufferGraphics.setColor(Color.WHITE);
-                    bufferGraphics.setStroke(new Trazo(jSlider1.getValue(), true, true));
-                    bufferGraphics.drawLine(posLapizX, posLapizY, posLapizXX, posLapizYY);
+                    buffer2Graphics.setColor(Color.WHITE);
+                    buffer2Graphics.setStroke(new Trazo(jSlider1.getValue(), true, true));
+                    buffer2Graphics.drawLine(posLapizX, posLapizY, posLapizXX, posLapizYY);
                     posLapizX = posLapizXX;
                     posLapizY = posLapizYY;
                 }
                 break;
-
+                
+            case 482:
+                miSpray = new Spray(evt.getX(), evt.getY(), colorSeleccionado);
+                miSpray.dibujate(buffer2Graphics, evt.getX(), evt.getY(), jSlider1.getValue());
+                break;
             default:
                 // Sobreescribe el lienzo
                 if (!jCheckBox2.isSelected()) {
@@ -862,11 +868,12 @@ public class VentanaPaint extends javax.swing.JFrame {
                 } else {
                     miForma.dibujate(bufferGraphics, evt.getX(), evt.getY(), new Trazo(jSlider1.getValue(), true));
                 }
+                
+                if (jToggleButton11.isSelected()) {
+                    bufferGraphics.drawImage(buffer2, 0, 0, null);
+                }
                 break;
-            case 482:
-                miSpray = new Spray(evt.getX(), evt.getY(), colorSeleccionado);
-                miSpray.dibujate(bufferGraphics, evt.getX(), evt.getY(), jSlider1.getValue());
-                break;
+            
         }
         repaint(0, 0, 1, 1);
     }//GEN-LAST:event_jPanel1MouseDragged
@@ -917,6 +924,8 @@ public class VentanaPaint extends javax.swing.JFrame {
                 //colorSeleccionado = new Color (buffer2.setRGB(evt.getX(), evt.getY(), setBackground(red)))
                 jPanel2.setBackground(colorSeleccionado);
                 break;
+                
+                
         }
     }//GEN-LAST:event_jPanel1MousePressed
 
@@ -936,6 +945,7 @@ public class VentanaPaint extends javax.swing.JFrame {
             buffer3Graphics = buffer3.createGraphics();
             buffer3Graphics.drawImage(buffer2, null, this);
             retroceso.add(buffer3);
+            
         }
     }//GEN-LAST:event_jPanel1MouseReleased
 
@@ -1057,7 +1067,7 @@ public class VentanaPaint extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         try {
             Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://github.com/Luiser-ttv/PainCarlosyLuis");
+            URI oURL = new URI("https://github.com/Luiser-ttv/PaintDefinitivo");
             desktop.browse(oURL);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1077,6 +1087,7 @@ public class VentanaPaint extends javax.swing.JFrame {
         bufferGraphics.setColor(Color.WHITE);
         bufferGraphics.fillRect(0, 0, jPanel1.getWidth(), jPanel1.getHeight());
         jPanelGraphics.drawImage(buffer, 0, 0, null);
+        actualizaBuffers();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
@@ -1101,7 +1112,7 @@ public class VentanaPaint extends javax.swing.JFrame {
         jDialog3.setVisible(false);
         _texto = new Escribe(Xtex, Ytex, texto);
         _texto.escribe(jPanelGraphics, Xtex, Ytex, texto, colorSeleccionado, tamLetra);
-        _texto.escribe(bufferGraphics, Xtex, Ytex, texto, colorSeleccionado, tamLetra);
+        _texto.escribe(buffer2Graphics, Xtex, Ytex, texto, colorSeleccionado, tamLetra);
         _texto.escribe(buffer2Graphics, Xtex, Ytex, texto, colorSeleccionado, tamLetra);
         jPanelGraphics.drawImage(buffer2, 0, 0, null);
         jTextArea1.setText("");
@@ -1110,6 +1121,8 @@ public class VentanaPaint extends javax.swing.JFrame {
         buffer3Graphics = buffer3.createGraphics();
         buffer3Graphics.drawImage(buffer2, null, this);
         retroceso.add(buffer3);
+        
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jToggleButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton11ActionPerformed
@@ -1193,9 +1206,9 @@ public class VentanaPaint extends javax.swing.JFrame {
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
          if (retroceso.size() > 1){//acceso directo para el deshacer
-            bufferGraphics.drawImage(retroceso.get(retroceso.size() - 2), 0, 0, null);
+            buffer2Graphics.drawImage(retroceso.get(retroceso.size() - 2), 0, 0, null);
             retroceso.remove(retroceso.size() - 1);
-            jPanelGraphics.drawImage(buffer, 0, 0, null);
+            jPanelGraphics.drawImage(buffer2, 0, 0, null);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
